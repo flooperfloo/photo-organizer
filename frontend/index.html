@@ -3,16 +3,72 @@
   <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <title>Hello World!</title>
+<!--     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+    <title>Photo Organizer</title>
+    <style>
+      body {
+        background-color:  black;
+      }
+      .imgbox {
+        outline:  1px solid white;
+        width:  60vw;
+        height:  80vh;
+        float:  left;
+      }
+
+      #main-img {
+        max-width:  60vw;
+        max-height:  80vh;
+      }
+
+      .folders {
+        float:  right;
+        width:  30vw;
+        height:  80vh;
+        outline:  1px solid white;
+        margin:  0 2vw;
+      }
+
+      #folder-select-section button {
+        outline:  2px solid orange;
+        margin:  2px;
+      }
+
+      #next,#prev {
+        font-size: 35px;
+        padding: 0 12vw;
+      }
+
+      #add-folder-section {
+        margin:  2px;
+      }
+
+      #new-folder-name {
+        width: 92px;
+      }
+    </style>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>.
+    <div class='imgbox'>
+      <img id='main-img' src="" /> 
+    </div>
+    <div class='folders'>
+      <div id='folder-select-section'>
+        <button id='src-folder-select'>Pick src folder</button>
+        <button id='dest-folder-select'>Pick dest folder</button>
+      </div>
+      <div id='add-folder-section'>
+        <input id='new-folder-name' type='text' placeholder='name'>
+        <button id='add-folder'>Add folder</button>
+      </div>
+      <hr>
+      <div id='folders-list'></div>
+    </div>
+    <div class='next-prev-buttons'>
+      <button id='prev'>Prev</button>
+      <button id='next'>Next</button>
+    </div>
   </body>
 
-  <script src=''
+  <script src='./frontend_messages.js'></script>
 </html>
