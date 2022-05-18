@@ -15,4 +15,8 @@ Software doesn't need to be fancy, it needs to get the job done.
    - Note: dest folder is expected to contain sub-folders, which is where you will move the images to
 5. Can use the "add folder" to add a new subfolder in the destination folder or click any of the existing subfolders to move the image there.
 
+## Note on metadata
+
+This program doesn't do anything with EXIF metadata. If you want to do that, I personally recommend Picasa which isn't officially available but you can download from Sourceforge still. It is still the best image organizer program, but its tools for filesystem are lacking. So this repo complements it in that regard. 
+
 ![image](https://user-images.githubusercontent.com/105807061/169090155-a8e3f98d-9c66-489b-863b-c089982f309b.png)
