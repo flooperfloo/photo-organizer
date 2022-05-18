@@ -1,7 +1,12 @@
 # photo-organizer
 a NON FANCY electron app for EASILY organizing photos into folders!
 
-USAGE:
+## Why did I make this
+
+Most of the existing software for this purpose is too complicated / advanced and not optimized for speed and ease-of-use.
+Software doesn't need to be fancy, it needs to get the job done. 
+
+## USAGE:
 
 1. `npm install` to get deps. I am on Node 16 at time of writing. Hopefully it'll work with different versions.
 2. `npm start` to start (TODO: package it up and make a doubleclick launcher)
