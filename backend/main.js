@@ -19,7 +19,7 @@ const createWindow = () => {
 
   win.loadFile("./frontend/index.html")
 
-  win.webContents.openDevTools({ mode: 'detach' });
+  // win.webContents.openDevTools({ mode: 'detach' });
 }
 
 app.whenReady().then(() => {

@@ -22,7 +22,8 @@ module.exports = { init: (mainWindow) => {
       dirents = fs.readdirSync(folder, { withFileTypes: true });
       return dirents
           .filter(dirent => !dirent.isFile())
-          .map(dirent => dirent.name);
+          .map(dirent => dirent.name).
+          sort();
    }   
 
    ipcMain.on('src-folder-select', (event, arg) => {
