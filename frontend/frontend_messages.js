@@ -2,6 +2,8 @@ window.$ = require('jquery')
 
 const { ipcRenderer } = require('electron')
 
+filesLeft = 0
+
 initNextPrevButtons = () => {
 	$("#next").on("click", () => {
 		getNextImage({mode: "increment"})
@@ -11,13 +13,28 @@ initNextPrevButtons = () => {
 	})
 }
 
+addKeypressListeners = () => {
+	$("body").on('keyup', function (e) {
+		if (e.key == "ArrowRight"){
+			getNextImage({mode: 'increment'})
+		}
+		if (e.key == "ArrowLeft"){
+			getNextImage({mode: 'decrement'})
+		}
+
+	})
+
+}
+
 setImg = (path) => {
 	$("#main-img").attr("src", path)
 	// debugger
 }
 
 getNextImage = (opts={}) => {
-	img_path = ipcRenderer.sendSync("get-next-img", opts)
+	[numFiles, img_path] = ipcRenderer.sendSync("get-next-img", opts)
+	filesLeft = numFiles
+	updateFilesLeft(filesLeft)
 	setImg(img_path)
 }
 
@@ -32,6 +49,10 @@ initSrcFolderSelect = () => {
 		localStorage.srcFolder = srcFolder
 		getNextImage()
 	})
+}
+
+updateFilesLeft = (numFiles) => {
+	$("#files-left").text(`${numFiles} files left`)
 }
 
 initDestFolderSelect = () => {
@@ -61,6 +82,7 @@ addFolderToList = ($foldersList, folder) => {
 moveImgToFolder = (folder) =>  {
 	newImg = ipcRenderer.sendSync("move-to-folder", folder)
 	setImg(newImg)
+	updateFilesLeft(filesLeft - 1)
 }
 
 initFolderButtons = () => {
@@ -84,6 +106,12 @@ initNewFolderButton = () => {
 	})
 }
 
+initPhotoClick = () => {
+	$("#main-img").on("click", (e) => {
+		ipcRenderer.send("open-img", $("#main-img").attr("src"))
+	})
+}
+
 getCachedFolders = (destFolder) => {
 	return ipcRenderer.sendSync("get-cached-folders", destFolder)
 }
@@ -101,4 +129,6 @@ $(() =>{
 	}
 	initFolderButtons()
 	initNewFolderButton()
+	initPhotoClick()
+	addKeypressListeners()
 })

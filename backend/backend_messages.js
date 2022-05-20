@@ -1,4 +1,6 @@
-const { ipcMain, dialog } = require('electron')
+const { ipcMain, dialog, BrowserWindow } = require('electron')
+const { exec } = require("child_process");
+
 fs = require('fs')
 
 module.exports = { init: (mainWindow) => {
@@ -70,6 +72,59 @@ module.exports = { init: (mainWindow) => {
       event.returnValue = `${srcFolder}/${files[idx]}`
    })
 
+   ipcMain.on("open-img", (event, path) => {
+      // console.log("OPEN IMG: " + path)
+      // exec(`open ${path}`)
+      win = new BrowserWindow({
+       fullscreen: false,
+       icon: "icon.png",
+       webPreferences: {
+         // The "right way" is to use the preload script with content bridge.
+         // Ain't got time for that.
+          nodeIntegration: true,
+          contextIsolation: false,
+          protocol: "file",
+          webSecurity: false
+         // preload: path.join(__dirname, "../frontend/preload.js")
+       },      
+      })
+      win.loadFile(path)
+      win.webContents.setZoomFactor(1.0);
+      win.maximize()
+        
+      // Upper Limit is working of 500 %
+      win.webContents
+          .setVisualZoomLevelLimits(1, 5)
+          .then(console.log("Zoom Levels Have been Set between 100% and 500%"))
+          .catch((err) => console.log(err));
+        
+      win.webContents.on("zoom-changed", (event, zoomDirection) => {
+          console.log(zoomDirection);
+          var currentZoom = win.webContents.getZoomFactor();
+          console.log("Current Zoom Factor - ", currentZoom);
+          // console.log('Current Zoom Level at - '
+          // , win.webContents.getZoomLevel());
+          console.log("Current Zoom Level at - ", win.webContents.zoomLevel);
+        
+          if (zoomDirection === "in") {
+              
+              // win.webContents.setZoomFactor(currentZoom + 0.20);
+              win.webContents.zoomFactor = currentZoom + 0.2;
+        
+              console.log("Zoom Factor Increased to - "
+                          , win.webContents.zoomFactor * 100, "%");
+          }
+          if (zoomDirection === "out") {
+              
+              // win.webContents.setZoomFactor(currentZoom - 0.20);
+              win.webContents.zoomFactor = currentZoom - 0.2;
+        
+              console.log("Zoom Factor Decreased to - "
+                          , win.webContents.zoomFactor * 100, "%");
+          }
+      });      
+   })
+
    ipcMain.on("get-next-img", (event, {cachedSrcFolder, mode="reload"}) => {
       if (mode == "increment") { idx += 1 }
       if (mode == "decrement") { idx -= 1 }
@@ -81,7 +136,8 @@ module.exports = { init: (mainWindow) => {
          files = loadFiles(cachedSrcFolder)
       }
 
-      event.returnValue = `${srcFolder || cachedSrcFolder}/${files[idx]}`
+      file = `${srcFolder || cachedSrcFolder}/${files[idx]}`
+      event.returnValue = [files.length, file]
    })   
 
    ipcMain.on("get-cached-folders", (event, cachedDestFolder) => {
